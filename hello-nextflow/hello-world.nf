@@ -3,19 +3,30 @@
 /*
  * Use echo to print 'Hello World!' to a file
  */
+
 process sayHello {
+
+    publishDir 'results', mode: 'copy'
+
+    input:
+        val greeting
 
     output:
         path 'output.txt'
 
     script:
     """
-    echo 'Hello World!' > output.txt
+    echo '$greeting' > output.txt
     """
 }
+
+/*
+ * Pipeline parameters
+ */
+params.greeting = 'Holà mundo!'
 
 workflow {
 
     // emit a greeting
-    sayHello()
+    sayHello(params.greeting)
 }
