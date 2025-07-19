@@ -13,12 +13,13 @@ include { convertToUpper } from './modules/convertToUpper.nf'
 include { collectGreetings } from './modules/collectGreetings.nf'
 include { cowpy } from './modules/cowpy.nf'
 
-workflow {
+workflow HELLO {
 
-    // create a channel for inputs from a CSV file
-    greeting_ch = Channel.fromPath(params.greeting)
-                        .splitCsv()
-                        .map { line -> line[0] }
+    take:
+    // channel of greetings
+    greeting_ch
+
+    main:
 
     // emit a greeting
     sayHello(greeting_ch)
@@ -34,4 +35,7 @@ workflow {
 
     // generate ASCII art of the greetings with cowpy
     cowpy(collectGreetings.out.outfile, params.character)
+
+    emit:
+    cowpy_hellos = cowpy.out
 }
